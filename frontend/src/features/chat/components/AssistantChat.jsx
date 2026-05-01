@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-function Chat({ messages, isLoading, onSendMessage }) {
+function AssistantChat({ messages, isLoading, onSendMessage }) {
   const [input, setInput] = useState("");
   const [voiceState, setVoiceState] = useState("idle");
   const [voicePreview, setVoicePreview] = useState("");
@@ -108,7 +108,7 @@ function Chat({ messages, isLoading, onSendMessage }) {
         aborted: "Voice input was cancelled.",
         network:
           "Voice recognition is unavailable right now. Try again, use Chrome on HTTPS or localhost, or type your update.",
-        "service-not-allowed": "Voice input is blocked in this browser session.",
+        "service-not-allowed": "Voice input is blocked in this browser session",
       };
 
       setVoiceState("idle");
@@ -202,17 +202,14 @@ function Chat({ messages, isLoading, onSendMessage }) {
           })}
         </div>
 
-        {isLoading && (
+        {isLoading ? (
           <div className="mt-4 max-w-[88%] rounded-[12px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-500 shadow-sm">
             Parsing your interaction...
           </div>
-        )}
+        ) : null}
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="border-t border-slate-200 bg-white p-5 md:p-6"
-      >
+      <form onSubmit={handleSubmit} className="border-t border-slate-200 bg-white p-5 md:p-6">
         <div className="flex items-end gap-3">
           <button
             type="button"
@@ -249,4 +246,4 @@ function Chat({ messages, isLoading, onSendMessage }) {
   );
 }
 
-export default Chat;
+export default AssistantChat;

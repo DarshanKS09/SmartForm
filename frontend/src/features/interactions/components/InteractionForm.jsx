@@ -1,9 +1,12 @@
+import FormField from "./FormField";
+import SavedEntriesList from "./SavedEntriesList";
+
 const interactionOptions = ["Meeting", "Call", "Visit", "Other"];
 
 const fieldClassName =
   "w-full rounded-[10px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
 
-function Form({
+function InteractionForm({
   formData,
   onFieldChange,
   onSaveEntry,
@@ -56,8 +59,7 @@ function Form({
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">HCP Name</span>
+              <FormField label="HCP Name">
                 <input
                   className={fieldClassName}
                   type="text"
@@ -65,12 +67,9 @@ function Form({
                   onChange={(event) => onFieldChange("hcp_name", event.target.value)}
                   placeholder="Search or select HCP..."
                 />
-              </label>
+              </FormField>
 
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">
-                  Interaction Type
-                </span>
+              <FormField label="Interaction Type">
                 <select
                   className={fieldClassName}
                   value={formData.interaction_type}
@@ -83,37 +82,34 @@ function Form({
                     </option>
                   ))}
                 </select>
-              </label>
+              </FormField>
             </div>
           </section>
 
           <section>
             <div className="grid gap-6 md:grid-cols-2">
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">Date</span>
+              <FormField label="Date">
                 <input
                   className={fieldClassName}
                   type="date"
                   value={formData.date}
                   onChange={(event) => onFieldChange("date", event.target.value)}
                 />
-              </label>
+              </FormField>
 
-              <label className="block">
-                <span className="mb-2 block text-sm font-semibold text-slate-700">Time</span>
+              <FormField label="Time">
                 <input
                   className={fieldClassName}
                   type="time"
                   value={formData.time}
                   onChange={(event) => onFieldChange("time", event.target.value)}
                 />
-              </label>
+              </FormField>
             </div>
           </section>
 
           <section>
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-slate-700">Attendees</span>
+            <FormField label="Attendees">
               <input
                 className={fieldClassName}
                 type="text"
@@ -121,21 +117,18 @@ function Form({
                 onChange={(event) => onFieldChange("attendees", event.target.value)}
                 placeholder="Enter names or search..."
               />
-            </label>
+            </FormField>
           </section>
 
           <section>
-            <label className="block">
-              <span className="mb-2 block text-sm font-semibold text-slate-700">
-                Topics Discussed
-              </span>
+            <FormField label="Topics Discussed">
               <textarea
                 className={`${fieldClassName} min-h-[112px] resize-none`}
                 value={formData.topics}
                 onChange={(event) => onFieldChange("topics", event.target.value)}
                 placeholder="Enter key discussion points..."
               />
-            </label>
+            </FormField>
 
             <button
               type="button"
@@ -164,72 +157,16 @@ function Form({
             </div>
           </section>
 
-          <section className="border-t border-slate-200 pt-8">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <h2 className="text-[15px] font-semibold text-slate-700">Saved Entries</h2>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                {entries.length} total
-              </span>
-            </div>
-
-            {entries.length === 0 ? (
-              <div className="rounded-[12px] border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-500">
-                No interactions saved yet. Save this form to build a local history for duplicate
-                detection.
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {entries.map((entry) => (
-                  <div
-                    key={entry.id}
-                    className={`rounded-[12px] border px-4 py-4 ${
-                      editingEntryId === entry.id
-                        ? "border-blue-200 bg-blue-50/70"
-                        : "border-slate-200 bg-slate-50/80"
-                    }`}
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="text-sm font-semibold text-slate-800">
-                        {entry.hcp_name || "Unnamed interaction"}
-                      </p>
-                      <span className="text-xs font-medium text-slate-500">
-                        {[entry.date, entry.time].filter(Boolean).join(" • ") || "No date/time"}
-                      </span>
-                    </div>
-
-                    <p className="mt-1 text-sm text-slate-600">
-                      {entry.topics || entry.materials || "No summary available."}
-                    </p>
-
-                    {entry.attendees ? (
-                      <p className="mt-2 text-xs text-slate-500">Attendees: {entry.attendees}</p>
-                    ) : null}
-
-                    <div className="mt-4 flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => onEditEntry(entry.id)}
-                        className="inline-flex items-center justify-center rounded-[10px] border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-100"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onDeleteEntry(entry.id)}
-                        className="inline-flex items-center justify-center rounded-[10px] border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-600 transition hover:bg-rose-50"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
+          <SavedEntriesList
+            entries={entries}
+            editingEntryId={editingEntryId}
+            onEditEntry={onEditEntry}
+            onDeleteEntry={onDeleteEntry}
+          />
         </div>
       </div>
     </div>
   );
 }
 
-export default Form;
+export default InteractionForm;
